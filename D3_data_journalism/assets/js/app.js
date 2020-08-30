@@ -11,8 +11,8 @@ function makeResponsive() {
 
   // SVG wrapper dimensions are determined by the current width and
   // height of the browser window.
-  const svgWidth = window.innerWidth;
-  const svgHeight = window.innerHeight;
+  const svgWidth = window.innerWidth-200;
+  const svgHeight = window.innerHeight-50;
 
   const margin = {
     top: 20,
@@ -87,14 +87,16 @@ function makeResponsive() {
   }
 
   // function used for updating circles group with a transition to new circles
-  function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+  function renderXCircles(circlesGroup, newXScale, chosenXAxis) {
 
     circlesGroup.transition()
       .duration(1000)
       .attr("cx", d => newXScale(d[chosenXAxis]))
 
-    return circlesGroup
-
+    return circlesGroup;
+  }
+  
+  function renderYCircles(circlesGroup, newYScale, chosenYAxis) {
     circlesGroup.transition()
       .duration(1000)
       .attr("cy", d => newYScale(d[chosenYAxis]));
@@ -103,17 +105,18 @@ function makeResponsive() {
   }
 
   // function used for updating circles text with a transition to new circles
-  function renderStates(statesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
-
+  function renderXStates(statesGroup, newXScale, chosenXAxis) {
     statesGroup.transition()
       .duration(1000)
       .attr("x", d => newXScale(d[chosenXAxis]));
 
     return statesGroup;
+  }
 
+  function renderYStates(statesGroup, newYScale, chosenYAxis) {
     statesGroup.transition()
-    .duration(1000)
-    .attr("y", d => newYScale(d[chosenYAxis]));
+      .duration(1000)
+      .attr("y", d => newYScale(d[chosenYAxis]));
 
     return statesGroup;
   }
@@ -164,6 +167,7 @@ function makeResponsive() {
 
     return circlesGroup;
   };
+
 
   // Load data from data.csv
   d3.csv("assets/data/data.csv").then(function(data, err) {
@@ -296,10 +300,10 @@ function makeResponsive() {
           xAxis = renderxAxes(xLinearScale, xAxis);
 
           // updates circles with new x values
-          circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
+          circlesGroup = renderXCircles(circlesGroup, xLinearScale, chosenXAxis);
 
           // updates states with new x values
-          statesGroup = renderStates(statesGroup, xLinearScale, chosenXAxis);
+          statesGroup = renderXStates(statesGroup, xLinearScale, chosenXAxis);
 
           // updates tooltips with new info
           circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -344,7 +348,6 @@ function makeResponsive() {
     // y axis labels event listener
     ylabelsGroup.selectAll("text")
       .on("click", function () {
-      // get value of selection
       const yvalue = d3.select(this).attr("value");
       if (yvalue !== chosenYAxis) {
 
@@ -359,10 +362,10 @@ function makeResponsive() {
         yAxis = renderyAxes(yLinearScale, yAxis);
 
         // updates circles with new y values
-        circlesGroup = renderCircles(circlesGroup, yLinearScale, chosenYAxis);
+        circlesGroup = renderYCircles(circlesGroup, yLinearScale, chosenYAxis);
 
         // updates states with new y values
-        statesGroup = renderStates(statesGroup, yLinearScale, chosenYAxis);
+        statesGroup = renderYStates(statesGroup, yLinearScale, chosenYAxis);
 
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);

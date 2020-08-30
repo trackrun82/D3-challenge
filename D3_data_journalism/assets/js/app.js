@@ -165,15 +165,10 @@ function makeResponsive() {
     return circlesGroup;
   };
 
-
   // Load data from data.csv
   d3.csv("assets/data/data.csv").then(function(data, err) {
     if (err) throw err;
     console.log(data);
-    
-    // log a list of states
-    var states = data.map(data => data.abbr);
-    console.log(states);
 
     // parse data
     data.forEach(function (data) {
@@ -216,15 +211,15 @@ function makeResponsive() {
       .attr("r", 10);
 
     // append initial state names
-    let statesGroup = chartGroup.selectAll("text")
+    let statesGroup = chartGroup.selectAll('div')
       .data(data)
       .enter()
       .append("text")
       .classed("stateText", true)
-      .text(d => d.abbr)
-      .attr('font-size', 10)
       .attr("x", d => xLinearScale(d[chosenXAxis]))
       .attr("y", d => yLinearScale(d[chosenYAxis]))
+      .text(d => d.abbr)
+      .attr('font-size', 10)
       .attr('dy', 4);
     
     // Create group for three x-axis labels
